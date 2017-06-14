@@ -28,7 +28,7 @@ func get_ip() (string, error) {
 var old_ip string
 
 func main() {
-	single_proc := single.New("name")
+	single_proc := single.New("IP Checker")
 	single_proc.Lock()
 	defer single_proc.Unlock()
 
