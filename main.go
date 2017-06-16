@@ -25,6 +25,12 @@ func get_ip() (string, error) {
 	return ip, err
 }
 
+func err_fatal(err error) {
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 var old_ip string
 
 func main() {
@@ -33,37 +39,24 @@ func main() {
 	defer single_proc.Unlock()
 
 	mw, err := walk.NewMainWindow()
-	if err != nil {
-		log.Fatal(err)
-	}
+	err_fatal(err)
 
 	icon, err := walk.NewIconFromResourceId(9)
-	if err != nil {
-		log.Fatal(err)
-	}
+	err_fatal(err)
 
 	ni, err := walk.NewNotifyIcon()
-	if err != nil {
-		log.Fatal(err)
-	}
+	err_fatal(err)
 	defer ni.Dispose()
 
-	if err := ni.SetIcon(icon); err != nil {
-		log.Fatal(err)
-	}
+	err_fatal(ni.SetIcon(icon))
 
 	exitAction := walk.NewAction()
-	if err := exitAction.SetText("E&xit"); err != nil {
-		log.Fatal(err)
-	}
-	exitAction.Triggered().Attach(func() { walk.App().Exit(0) })
-	if err := ni.ContextMenu().Actions().Add(exitAction); err != nil {
-		log.Fatal(err)
-	}
+	err_fatal(exitAction.SetText("E&xit"))
 
-	if err := ni.SetVisible(true); err != nil {
-		log.Fatal(err)
-	}
+	exitAction.Triggered().Attach(func() { walk.App().Exit(0) })
+	err_fatal(ni.ContextMenu().Actions().Add(exitAction))
+
+	err_fatal(ni.SetVisible(true))
 
 	go func() {
 		first_loop := true
@@ -72,12 +65,10 @@ func main() {
 			if ip_err == nil {
 				first_loop = false
 				old_ip = ip
-				if err := ni.ShowCustom(
+				err_fatal(ni.ShowCustom(
 					"IP Checker",
-					" Current IP is "+old_ip); err != nil {
+					" Current IP is "+old_ip))
 
-					log.Fatal(err)
-				}
 
 				go func() {
 					for {
@@ -85,12 +76,10 @@ func main() {
 						ip, ip_err := get_ip()
 						if ip_err == nil {
 							if old_ip != ip {
-								if err := ni.ShowCustom(
+								err_fatal(ni.ShowCustom(
 									"IP Checker",
-									" Old IP - "+old_ip+" New IP - "+ip); err != nil {
+									" Old IP - "+old_ip+" New IP - "+ip))
 
-									log.Fatal(err)
-								}
 								old_ip = ip
 							}
 						}
