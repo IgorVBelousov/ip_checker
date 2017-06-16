@@ -68,7 +68,7 @@ func main() {
 				err_fatal(ni.ShowCustom(
 					"IP Checker",
 					" Current IP is "+old_ip))
-
+				err_fatal(ni.SetToolTip("Current IP is " + old_ip))
 
 				go func() {
 					for {
@@ -79,6 +79,7 @@ func main() {
 								err_fatal(ni.ShowCustom(
 									"IP Checker",
 									" Old IP - "+old_ip+" New IP - "+ip))
+								err_fatal(ni.SetToolTip(" Old IP - " + old_ip + " New IP - " + ip))
 
 								old_ip = ip
 							}
