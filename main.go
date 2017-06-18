@@ -32,6 +32,7 @@ func err_fatal(err error) {
 }
 
 var old_ip string
+var old_t string
 
 func main() {
 	single_proc := single.New("IP Checker")
@@ -65,10 +66,11 @@ func main() {
 			if ip_err == nil {
 				first_loop = false
 				old_ip = ip
+				old_t = fmt.Sprint(time.Now().Format("_2 15:04:05"))
 				err_fatal(ni.ShowCustom(
 					"IP Checker",
-					" Current IP is "+old_ip))
-				err_fatal(ni.SetToolTip("Current IP is " + old_ip))
+					old_t+" Current IP is "+old_ip))
+				err_fatal(ni.SetToolTip(old_t + " Current IP is " + old_ip))
 
 				go func() {
 					for {
@@ -76,12 +78,14 @@ func main() {
 						ip, ip_err := get_ip()
 						if ip_err == nil {
 							if old_ip != ip {
+								t := fmt.Sprint(time.Now().Format("_2 15:04:05"))
 								err_fatal(ni.ShowCustom(
 									"IP Checker",
-									" Old IP - "+old_ip+" New IP - "+ip))
-								err_fatal(ni.SetToolTip(" Old IP - " + old_ip + " New IP - " + ip))
+									t+" - "+ip+"\n"+old_t+" - "+old_ip))
+								err_fatal(ni.SetToolTip(t + " - " + ip + "\n" + old_t + " - " + old_ip))
 
 								old_ip = ip
+								old_t = t
 							}
 						}
 					}
