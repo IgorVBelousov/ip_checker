@@ -11,7 +11,7 @@ import (
 )
 
 func get_ip() (string, error) {
-	resp, err := http.Get("https://4.ifcfg.me/ip")
+	resp, err := http.Get("https://ifconfig.co/ip")
 	if err != nil {
 		return "", err
 	}
