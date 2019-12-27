@@ -45,7 +45,7 @@ func main() {
 	icon, err := walk.NewIconFromResourceId(9)
 	err_fatal(err)
 
-	ni, err := walk.NewNotifyIcon()
+	ni, err := walk.NewNotifyIcon(mw)
 	err_fatal(err)
 	defer ni.Dispose()
 
@@ -69,7 +69,7 @@ func main() {
 				old_t = fmt.Sprint(time.Now().Format("_2 15:04:05"))
 				err_fatal(ni.ShowCustom(
 					"IP Checker",
-					old_t+" Current IP is "+old_ip))
+					old_t+" Current IP is "+old_ip, icon))
 				err_fatal(ni.SetToolTip(old_t + " Current IP is " + old_ip))
 
 				go func() {
@@ -81,7 +81,7 @@ func main() {
 								t := fmt.Sprint(time.Now().Format("_2 15:04:05"))
 								err_fatal(ni.ShowCustom(
 									"IP Checker",
-									t+" - "+ip+"\n"+old_t+" - "+old_ip))
+									t+" - "+ip+"\n"+old_t+" - "+old_ip, icon))
 								err_fatal(ni.SetToolTip(t + " - " + ip + "\n" + old_t + " - " + old_ip))
 
 								old_ip = ip
